@@ -24,7 +24,7 @@ app.use(session({
   store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
 }));
 
-// require('./config/passport')(passport);
+require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
