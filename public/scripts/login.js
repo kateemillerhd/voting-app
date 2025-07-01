@@ -12,18 +12,22 @@ document.addEventListener("DOMContentLoaded", () => {
         password: formData.get("password")
       };
 
-      const res = await fetch("/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+      try {
+        const res = await fetch("/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
       });
 
-      const data = await res.json();
-      if (res.ok) {
-        alert("Registered and logged in!");
-        window.location.href = "/";
-      } else {
-        alert(data.error || "Registration failed.");
+        const data = await res.json();
+        if (res.ok) {
+          alert("Registered and logged in!");
+          window.location.href = "/";
+        } else {
+          alert(data.error || "Registration failed.");
+        }
+      } catch (err) {
+        console.error("Registration error:" err);
       }
     });
   }
@@ -38,19 +42,24 @@ document.addEventListener("DOMContentLoaded", () => {
         password: formData.get("password")
       };
 
-      cosnt res = await fetch("/.auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+      try {
+        const res = await fetch("/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
       });
 
-      const data = await res.json();
-      if (res.ok) {
-        alert("Logged in!");
-        window.location.href = "/";
-      } else {
-        alert(data.error || "Login failed.");
+        const data = await res.json();
+        if (res.ok) {
+          alert("Logged in!");
+          window.location.href = "/";
+        } else {
+          alert(data.error || "Login failed.");
+        }
+      } catch (err) {
+        console.error("registration error:", err);
       }
     });
   }
 });
+ 
