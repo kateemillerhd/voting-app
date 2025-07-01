@@ -3,11 +3,28 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create</title>
+    <title>Create Poll</title>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <h1>Create a New Poll</h1>
 
-    
+    <form id="poll-form">
+      <label>Poll Question:</label><br>
+      <input type="text" id="question" required><br><br>
+
+      <div id="options-list">
+        <label>Option 1:</label><br>
+        <input type="text" class="option-input" required><br><br>
+        <label>Option 2:</label><br>
+        <input type="text" class="option-input" required><br><br>
+      </div>
+
+      <button type="button" id="add-option">Add Option</button><br><br>
+      <button type="submit">Create Poll</button>
+    </form>
+
+    <p id="status-msg"></p>
+    <script src="script/create.js"></script>
   </body>
 </html>
