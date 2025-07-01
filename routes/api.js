@@ -44,4 +44,20 @@ router.post("/polls/:id/vote", async (req, res) => {
   res.json(poll);
 });
 
+router.get("/mypolls", ensureLoggedIn, async (req, res) => {
+  const polls = await Poll.find({ ownerId: req.user._id }, "question _id");
+  res.json(polls);
+});
+
+router.delete("/polls/:id", ensureLoggedIn, async (req, res) => {
+  const poll = await Poll.findById(req.params.id);
+
+  if (!poll) return res.status(404).json({ error: "Poll not found" });
+  if (!poll.ownerId.equals(req.user._id)) {
+    return res.status(403).json({ error: "You do not own this poll" });
+  }
+
+  await poll.deleteOne();
+  res.json({ message: "Poll deleted" });
+});
 module.exports = router;
