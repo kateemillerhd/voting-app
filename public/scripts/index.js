@@ -1,4 +1,4 @@
-document.addEvetListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('polls-container');
 
   fetch('/api/polls')
