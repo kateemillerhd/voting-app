@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body)
-      });
+        });
 
         const data = await res.json();
         if (res.ok) {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
           alert(data.error || "Registration failed.");
         }
       } catch (err) {
-        console.error("Registration error:" err);
+        console.error("Registration error:", err);
       }
     });
   }
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body)
-      });
+        });
 
         const data = await res.json();
         if (res.ok) {
@@ -57,9 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
           alert(data.error || "Login failed.");
         }
       } catch (err) {
-        console.error("registration error:", err);
+        console.error("Login error:", err);
       }
     });
   }
 });
- 
