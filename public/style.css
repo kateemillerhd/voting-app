@@ -74,12 +74,6 @@ input[type="password"] {
   font-weight: bold;
 }
 
-#results-chart {
-  max-width: 100%;
-  margin: 20px auto;
-  display: block;
-}
-
 .poll-card {
   background-color: #ecf0f1;
   padding: 12px 16px;
