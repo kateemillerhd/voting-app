@@ -7,6 +7,25 @@ router.get('/polls', async (req, res) => {
   res.json(polls);
 });
 
+router.get("/polls/:id", async (req, res) => {
+  const poll = await Poll.findById(req.params.id);
+  res.json(poll);
+});
+
+router.post("/polls/:id/vote", async (req, res) => {
+  const { optionIndex } = req.body;
+  const poll = await Poll.findById(req.params.id);
+
+  if (!poll || optionIndex < 0 || optionIndex >= poll.options.length) {
+    return res.status(400).json({ error: "Invalid vote" });
+  }
+
+  poll.options[optionIndex].votes += 1;
+  await poll.save();
+
+  res.json(poll);
+});
+
 router.get('/test', (req, res) => {
   res.json({ message: "API is working" });
 });
