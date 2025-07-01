@@ -18,15 +18,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || "keyboard cat",
+  secret: process.env.SESSION_SECRET || "secret",
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax'
+  }
 }));
 
-require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+
+require('./config/passport')(passport);
 
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));

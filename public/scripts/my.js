@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("my-polls");
   const statusMsg = document.getElementById("status-msg");
 
-  fetch('/api/mypolls')
-    .then(res => {
+  fetch("/api/mypolls", { credentials: "include" })
+    .then((res) => {
       if (res.status === 401) throw new Error("Not logged in.");
       return res.json();
     })
-    .then(polls => {
+    .then((polls) => {
       container.innerHTML = "";
 
       if (polls.length === 0) {
@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      polls.forEach(poll => {
-        const div = docuent.createElement("div");
+      polls.forEach((poll) => {
+        const div = document.createElement("div");
         div.className = "poll-card";
 
         const link = document.createElement("a");
@@ -27,7 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
         delBtn.textContent = "Delete";
         delBtn.onclick = async () => {
           if (confirm("Are you sure you want to delete this poll?")) {
-            const res = await fetch(`/api/polls/${poll._id}`, { method: "DELETE" });
+            const res = await fetch(`/api/polls/${poll._id}`, {
+              method: "DELETE",
+              credentials: "include",
+            });
             if (res.ok) {
               statusMsg.textContent = "Poll deleted.";
               div.remove();
@@ -43,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         container.appendChild(div);
       });
     })
-    .catch(err => {
+    .catch((err) => {
       container.textContent = "You must be logged in to view your polls.";
     });
-})
+});
