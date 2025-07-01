@@ -10,6 +10,13 @@ function fetchPoll() {
     .then((poll) => {
       questionEl.textContent = poll.question;
 
+      const alreadyVoted = localStorage.getItem(`voted_${pollId}`) === "true";
+
+      if (alreadyVoted) {
+        renderChart(poll);
+        return;
+      }
+
       poll.options.forEach((option, index) => {
         const button = document.createElement("button");
         button.textContent = option.text;
@@ -37,6 +44,8 @@ function vote(optionIndex) {
         return;
       }
 
+      localStorage.setItem(`voted_${pollId}`, "true");
+      
       statusMessage.textContent = "Vote submitted";
       renderChart(data);
     })
@@ -123,4 +132,8 @@ document.getElementById("submit-custom-option").addEventListener("click", async 
   } catch (err) {
     statusEl.textContent = "Network error.";
   }
+});
+
+document.getElementById("back-to-polls").addEventListener("click", () => {
+  window.location.href = "/index.html";
 });
