@@ -48,8 +48,22 @@ router.post("/polls/:id/vote", async (req, res) => {
 
   await poll.save();
   res.json(poll);
+});
 
-  res.json({ message: "Vote recorded" });
+router.post("/polls/:id/add-option", ensureLoggedIn, async (req, res) => {
+  const { text } = req.body;
+  if (!text || typeof text !== "string") {
+    return res.status(400).json({ ewrror: "Invalid option text" });
+  }
+
+  const poll = await Poll.findById(req.params.id);
+  if (!poll) return res.status(404).json({ error: "Poll not found" });
+
+  const newOption = { text, votes: 1 };
+  poll.options.push(newOption);
+  await poll.save();
+
+  res.json(poll);
 });
 
 router.get("/mypolls", ensureLoggedIn, async (req, res) => {

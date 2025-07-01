@@ -1,17 +1,17 @@
 const pollId = new URLSearchParams(window.location.search).get("id");
-const questionEl = document.getElementById('question');
-const optionsContainer = document.getElementById('options-container');
-const statusMessage = document.getElementById('status-message');
-const chartCanvas = document.getElementById('results-chart');
+const questionEl = document.getElementById("question");
+const optionsContainer = document.getElementById("options-container");
+const statusMessage = document.getElementById("status-message");
+const chartCanvas = document.getElementById("results-chart");
 
 function fetchPoll() {
   fetch(`/api/polls/${pollId}`)
-    .then(res => res.json())
-    .then(poll => {
+    .then((res) => res.json())
+    .then((poll) => {
       questionEl.textContent = poll.question;
 
       poll.options.forEach((option, index) => {
-        const button = document.createElement('button');
+        const button = document.createElement("button");
         button.textContent = option.text;
         button.onclick = () => vote(index);
         optionsContainer.appendChild(button);
@@ -26,15 +26,23 @@ function vote(optionIndex) {
   fetch(`/api/polls/${pollId}/vote`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ optionIndex })
+    body: JSON.stringify({ optionIndex }),
+    credentials: "include",
   })
-    .then(res => res.json())
-    .then(updatedPoll => {
-      statusMessage.textContent = "Vote submitted!";
-      renderChart(updatedPoll);
+    .then(async (res) => {
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("Vote error:", data);
+        statusMessage.textContent = data.error || "Vote failed";
+        return;
+      }
+
+      statusMessage.textContent = "Vote submitted";
+      renderChart(data);
     })
-    .catch(() => {
-      statusMessage.textContent = "Vote failed.";
+    .catch((err) => {
+      console.error("Vote fetch failed:", err);
+      statusMessage.textContent = "Vote failed (network).";
     });
 }
 
@@ -42,29 +50,77 @@ function renderChart(poll) {
   optionsContainer.style.display = "none";
   chartCanvas.style.display = "block";
 
-  const labels = poll.options.map(opt => opt.text);
-  const votes = poll.options.map(opt => opt.votes);
+  const labels = poll.options.map((opt) => opt.text);
+  const votes = poll.options.map((opt) => opt.votes);
 
   new Chart(chartCanvas, {
     type: "bar",
     data: {
       labels,
-      datasets: [{
-        label: "# of Votes",
-        data: votes,
-        backgroundColor: "rgba(54, 162, 235, 0.6)"
-      }]
+      datasets: [
+        {
+          label: "# of Votes",
+          data: votes,
+          backgroundColor: "rgba(54, 162, 235, 0.6)",
+        },
+      ],
     },
     options: {
       responsive: true,
       scales: {
         y: {
           beginAtZero: true,
-          precision: 0
-        }
-      }
-    }
+          precision: 0,
+        },
+      },
+    },
   });
 }
 
+document.getElementById("copy-link").addEventListener("click", () => {
+  const url = window.location.href;
+
+  navigator.clipboard.writeText(url)
+    .then(() => {
+      document.getElementById("copy-status").textContent = "Link copied to clipboard!";
+    })
+    .catch(() => {
+      document.getElementById("copy-status").textContent = "Failed to copy link.";
+    });
+});
+
 fetchPoll();
+
+document.getElementById("submit-custom-option").addEventListener("click", async () => {
+  const customOptionInput = document.getElementById("custom-option");
+  const statusEl = document.getElementById("custom-option-status");
+  const newOptionText = customOptionInput.value.trim();
+
+  if (!newOptionText) {
+    statusEl.textContent = "Please enter a valid option.";
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/polls/${pollId}/add-option`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ text: newOptionText })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      statusEl.textContent = "Option added and vote submitted!";
+      renderChart(data);
+    } else if (res.status === 401) {
+      statusEl.textContent = "You must be logged in to add an option.";
+    } else {
+      statusEl.textContent = data.error || "Failed to add option.";
+    }      
+     
+  } catch (err) {
+    statusEl.textContent = "Network error.";
+  }
+});

@@ -1,21 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vote on Poll</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="scripts/poll.js"></script>
   </head>
   <body>
     <h1 id="question">Loading...</h1>
 
     <div id="options-container"></div>
+    <h3>Don't like the options?</h3>
+    <input type="text" id="custom-option" placeholder="Enter your option">
+    <button id="submit-custom-option">Submit New Option</button>
+    <p id="custom-option-status"></p>
 
-    <canvas id="results-chart" width="400" height="200" style="display: none;"></canvas>
+    <canvas
+      id="results-chart"
+      width="400"
+      height="200"
+      style="display: none"
+    ></canvas>
+    <br><br>
+    <button id="copy-link">Share This Poll!</button>
+    <p id="copy-status"></p>
 
     <p id="status-message"></p>
-
-    <script src="https://cdn.jsdeliver.net/npm/chart.js"></script>
-    <script src="scripts/poll.js"></script>
-  </body>  
+  </body>
 </html>
