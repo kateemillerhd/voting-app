@@ -8,6 +8,8 @@ function fetchPoll() {
   fetch(`/api/polls/${pollId}`)
     .then(res => res.json())
     .then(poll => {
+      console.log("Fetched poll:", poll);
+      
       questionEl.textContent = poll.question;
 
       const alreadyVoted = localStorage.getItem(`voted_${pollId}`) === "true";
@@ -26,7 +28,8 @@ function fetchPoll() {
         optionsContainer.appendChild(button);
       });
     })
-    .catch(() => {
+    .catch(err => {
+      console.error("Poll fetch failed", err);
       questionEl.textContent = "Failed to load poll.";
     });
 }
@@ -58,6 +61,8 @@ function vote(optionIndex) {
 }
 
 function renderChart(poll) {
+  console.log("Rendering chart with:", poll.options);
+  
   optionsContainer.style.display = "none";
   chartCanvas.style.display = "block";
 

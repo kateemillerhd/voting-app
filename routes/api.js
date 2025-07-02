@@ -43,10 +43,9 @@ router.post("/polls/:id/vote", async (req, res) => {
     return res.status(400).json({ error: "Invalid option index" });
   }
 
-  const option = poll.options[optionIndex];
-  option.votes = (option.votes || 0) + 1;
-
+  poll.options[optionIndex].votes = (poll.options[optionIndex].votes || 0) + 1;
   await poll.save();
+
   res.json(poll);
 });
 

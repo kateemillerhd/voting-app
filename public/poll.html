@@ -9,29 +9,33 @@
     <script defer src="scripts/poll.js"></script>
   </head>
   <body>
-    <div class="container"
-      <h1 id="question">Loading...</h1>
+    <div class="container">
+      <h1 id="question"></h1>
 
       <div id="options-container"></div>
       <h3>Don't like the options?</h3>
-      <input type="text" id="custom-option" placeholder="Enter your option">
+      <input type="text" id="custom-option" placeholder="Enter your option" />
       <button id="submit-custom-option">Submit New Option</button>
       <p id="custom-option-status"></p>
 
       <canvas
         id="results-chart"
-        width="400"
-        height="200"
-        style="display: none"
+        style="display: none; max-width: 100%"
       ></canvas>
-      <br><br>
+      <br /><br />
       <button id="copy-link">Share This Poll!</button>
       <p id="copy-status"></p>
 
       <p id="status-message"></p>
 
-      <br>
-      <button id="back-to-polls">Back To All Polls</button>
+      <br />
+      <button
+        id="back-to-polls"
+        onclick="window.location.href='/index.html'"
+        style="display: none"
+      >
+        Back To All Polls
+      </button>
     </div>
   </body>
 </html>
