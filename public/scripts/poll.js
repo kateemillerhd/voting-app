@@ -6,8 +6,8 @@ const chartCanvas = document.getElementById("results-chart");
 
 function fetchPoll() {
   fetch(`/api/polls/${pollId}`)
-    .then((res) => res.json())
-    .then((poll) => {
+    .then(res => res.json())
+    .then(poll => {
       questionEl.textContent = poll.question;
 
       const alreadyVoted = localStorage.getItem(`voted_${pollId}`) === "true";
@@ -16,6 +16,8 @@ function fetchPoll() {
         renderChart(poll);
         return;
       }
+
+      optionsContainer.innerHTML = "";
 
       poll.options.forEach((option, index) => {
         const button = document.createElement("button");
@@ -59,8 +61,10 @@ function renderChart(poll) {
   optionsContainer.style.display = "none";
   chartCanvas.style.display = "block";
 
-  const labels = poll.options.map((opt) => opt.text);
-  const votes = poll.options.map((opt) => opt.votes);
+  statusMessage.textContent = "You already voted. Here are the results:";
+
+  const labels = poll.options.map(opt => opt.text);
+  const votes = poll.options.map(opt => opt.votes || 0);
 
   new Chart(chartCanvas, {
     type: "bar",
@@ -84,6 +88,8 @@ function renderChart(poll) {
       },
     },
   });
+
+  document.getElementById("back-to-polls").style.display = "inline-block";
 }
 
 document.getElementById("copy-link").addEventListener("click", () => {
